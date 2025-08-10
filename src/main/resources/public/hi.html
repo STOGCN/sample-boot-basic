@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery AJAX Call to Spring Boot</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- jQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        /* Custom font for a modern look */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+ 
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Spring Boot jQuery AJAX Demo</h1>
+ 
+        <div class="mb-6">
+            <label for="nameInput" class="block text-gray-700 text-sm font-semibold mb-2">
+                Enter your name (optional):
+            </label>
+            <input
+                type="text"
+                id="nameInput"
+                placeholder="e.g., Alice"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
+            />
+        </div>
+ 
+        <button
+            id="callApiButton"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+        >
+            Call Hello API (jQuery)
+        </button>
+ 
+        <div id="responseContainer" class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-md text-blue-800 text-lg font-medium hidden">
+            <!-- API response will be displayed here -->
+            <p>Response from server:</p>
+            <p id="apiResponse" class="mt-2 font-semibold text-xl"></p>
+        </div>
+    </div>
+ 
+    <script>
+        // Ensure jQuery is loaded before running the script
+        $(document).ready(function() {
+            // Get references to DOM elements using jQuery
+            const $nameInput = $('#nameInput');
+            const $callApiButton = $('#callApiButton');
+            const $responseContainer = $('#responseContainer');
+            const $apiResponse = $('#apiResponse');
+ 
+            // Add event listener to the button using jQuery
+            $callApiButton.on('click', function() {
+                const name = $nameInput.val(); // Get the value from the input field
+                let apiUrl = 'http://localhost:8080/hi'; // Base URL for your Spring Boot endpoint
+ 
+                // If a name is provided, append it as a query parameter
+                if (name) {
+                    apiUrl += `/${encodeURIComponent(name)}`;
+                }
+ 
+                // Show a loading message
+                $apiResponse.text('Loading...');
+                $responseContainer.removeClass('hidden');
+                $responseContainer.removeClass('bg-red-50 border-red-200 text-red-800').addClass('bg-blue-50 border-blue-200 text-blue-800'); // Reset styling
+ 
+                // Make the AJAX call using jQuery's $.ajax() method
+                $.ajax({
+                    url: apiUrl,
+                    method: 'GET', // Or 'type: 'GET''
+                    success: function(data) {
+                        // Display the response on success
+                        $apiResponse.text(data);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        // Handle any errors during the AJAX operation
+                        console.error('Error calling the API:', textStatus, errorThrown, jqXHR);
+                        $apiResponse.text(`Error: ${textStatus}. Make sure your Spring Boot app is running!`);
+                        $responseContainer.removeClass('bg-blue-50 border-blue-200 text-blue-800').addClass('bg-red-50 border-red-200 text-red-800'); // Style error message in red
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
