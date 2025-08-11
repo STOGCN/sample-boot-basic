@@ -2,34 +2,40 @@ package th.mfu;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+@Entity
 public class Customer {
-    private Integer id;
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
+
+    @JsonProperty("fullname")
+    @Column(name="displayname")
     private String name;
+
     private String address;
+
     private String email;
+
+    @JsonProperty("tel")
     private String phone;
+
     private LocalDate birthday;
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    @JsonSerialize(using= LocalDateSerializer.class)
-    @JsonDeserialize(using= LocalDateDeserializer.class)
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-    public String getName() {
+
+    public String getName(){
         return name;
     }
-    public void setName(String name) {
+    public void setName(String name){
         this.name = name;
     }
     public String getAddress() {
@@ -50,6 +56,19 @@ public class Customer {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    
 }
