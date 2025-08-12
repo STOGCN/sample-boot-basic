@@ -22,3 +22,16 @@ INSERT INTO CustomerTier (id, name) VALUES (1, 'Bronze');
 INSERT INTO CustomerTier (id, name) VALUES (2, 'Silver');
 INSERT INTO CustomerTier (id, name) VALUES (3, 'Gold');
 INSERT INTO CustomerTier (id, name) VALUES (4, 'Platinum');
+-- Insert sample ProductReview data
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (1, 1, 5, 'Excellent sound quality and battery life. Highly recommended!', '2024-03-01');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (1, 2, 4, 'Good headphones, comfortable to wear for long periods.', '2024-03-02');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (2, 3, 5, 'Amazing keyboard for gaming. The RGB lighting is fantastic!', '2024-03-03');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (2, 4, 4, 'Great tactile feedback, but a bit loud for office use.', '2024-03-04');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (3, 5, 3, 'Decent protection but could be more durable.', '2024-03-05');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (4, 6, 5, 'Crystal clear video quality, perfect for video conferences.', '2024-03-06');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (5, 7, 4, 'Fast charging and holds charge well. Good value for money.', '2024-03-07');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (6, 8, 5, 'Very comfortable chair, great for long work sessions.', '2024-03-08');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (7, 9, 4, 'Good lighting and USB port is convenient.', '2024-03-09');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (8, 10, 3, 'Works fine but the battery could last longer.', '2024-03-10');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (9, 1, 5, 'Great speaker with excellent sound quality and truly waterproof.', '2024-03-11');
+INSERT INTO ProductReview (product_id, customer_id, rating, comment, reviewDate) VALUES (10, 2, 4, 'Very useful hub with all the ports I need.', '2024-03-12');
