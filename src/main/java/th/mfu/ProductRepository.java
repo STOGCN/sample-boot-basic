@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface ProductRepository extends CrudRepository<Product,Integer>{
+public interface ProductRepository extends CrudRepository<Product, Integer>{
     List<Product> findAll();
-
-    // boolean existsById(Integer id);
+    List<Product> findByOrderByPrice();
+    List<Product> findByDescriptionContaining(String infix);
 
 }

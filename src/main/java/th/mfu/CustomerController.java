@@ -1,8 +1,8 @@
 package th.mfu;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,38 +16,59 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.deser.std.CollectionDeserializer;
+
 @RestController
 public class CustomerController {
-    
-    @Autowired
-    CustomerRepository customerRepo;
 
+    @Autowired
+    private CustomerRepository custRepo;
+
+    @Autowired
+    private CustomerTierRepository tierRepo;
+
+
+    // GET for a customer
+    @GetMapping("/customers/{id}")
+    public ResponseEntity<Customer> getCustomer(@PathVariable Long id){
+        if(!custRepo.existsById(id))
+            return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
+        Optional<Customer> customer = custRepo.findById(id);
+        return new ResponseEntity<Customer>(customer.get(), HttpStatus.OK);
+    }
+
+    // Get all customer
     @GetMapping("/customers")
-    public ResponseEntity<Collection> getAllCustomers() {
-        Collection results = customerRepo.findAll();
+    public ResponseEntity<Collection> getAllCustomers(){
+        return new ResponseEntity<Collection>(custRepo.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/customers/name/{prefix}")
+    public ResponseEntity<Collection> searchCustomerByName(@PathVariable String prefix){
+        List<Customer> results = custRepo.findByNameStartingWith(prefix);
         return new ResponseEntity<Collection>(results, HttpStatus.OK);
     }
 
-    @GetMapping("/customers/{id}")
-    public ResponseEntity<Customer> getCustomer(@PathVariable Integer id){
-            if (customerRepo.existsById(id)){
-                Optional<Customer> foundCustomer = customerRepo.findById(id);
-                return new ResponseEntity<Customer>(foundCustomer.get(), HttpStatus.OK);
-            }else {
-                return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
-            }
-            
-    }
-    
+
+    // POST for creating a customer
     @PostMapping("/customers")
     public ResponseEntity<String> createCustomer(@RequestBody Customer customer){
-        customerRepo.save(customer);
+        if(customer.getCustomerTier()!=null && customer.getCustomerTier().getId()==null){
+            Optional<CustomerTier> tierOpt = tierRepo.findById(customer.getCustomerTier().getId());
+            if(tierOpt.isPresent())
+                customer.setCustomerTier(tierOpt.get());
+            else
+                return new ResponseEntity<String>("Customer tier not found", HttpStatus.BAD_REQUEST);
+        }
+        custRepo.save(customer);
         return new ResponseEntity<String>("Customer created", HttpStatus.CREATED);
-
     }
-    @DeleteMapping("/customers/{id}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable Integer id){
-       customerRepo.deleteById(id);
+
+    // DELETE for deleting a customer by id
+    @DeleteMapping("customers/{id}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable Long id){
+        custRepo.deleteById(id);
         return new ResponseEntity<String>("Customer deleted", HttpStatus.NO_CONTENT);
     }
+
 }

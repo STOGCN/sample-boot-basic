@@ -1,13 +1,18 @@
 package th.mfu;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -31,6 +36,13 @@ public class Customer {
     private String phone;
 
     private LocalDate birthday;
+
+    @ManyToOne
+    private CustomerTier customerTier;
+
+    @OneToMany(mappedBy="customer")
+    @JsonManagedReference("customer-order")
+    private List<SaleOrder> saleOrders;
 
     public String getName(){
         return name;
@@ -69,6 +81,12 @@ public class Customer {
     }
     public void setId(Long id) {
         this.id = id;
+    }
+    public CustomerTier getCustomerTier() {
+        return customerTier;
+    }
+    public void setCustomerTier(CustomerTier customerTier) {
+        this.customerTier = customerTier;
     }
 
 }

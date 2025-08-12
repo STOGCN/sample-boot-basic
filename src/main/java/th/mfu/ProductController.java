@@ -1,6 +1,5 @@
 package th.mfu;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,40 +14,52 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.deser.std.CollectionDeserializer;
+
 @RestController
 public class ProductController {
 
     @Autowired
-    ProductRepository productRepo;
+    private ProductRepository prodRepo;
 
- @GetMapping("/products")
-    public ResponseEntity<Collection> getAllProduct(){
-        Collection results = productRepo.findAll();
-        return new ResponseEntity<Collection>(results, HttpStatus.OK);
-    }
-
-
+    // GET for a product
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer id){
-            if (productRepo.existsById(id)){
-                Optional<Product> foundCustomer = productRepo.findById(id);
-                return new ResponseEntity<Product>(foundCustomer.get(), HttpStatus.OK);
-            }else {
-                return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
-            }
-            
+        if(!prodRepo.existsById(id))
+            return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+        Optional<Product> product = prodRepo.findById(id);
+        return new ResponseEntity<Product>(product.get(), HttpStatus.OK);
     }
 
+    // Get all products
+    @GetMapping("/products")
+    public ResponseEntity<Collection> getAllProducts(){
+        return new ResponseEntity<Collection>(prodRepo.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/products/description/{infix}")
+    public ResponseEntity<Collection> searchByDescription(@PathVariable String infix){
+        return new ResponseEntity<Collection>(prodRepo.findByDescriptionContaining(infix), HttpStatus.OK);
+    }
+
+    @GetMapping("/products/price")
+    public ResponseEntity<Collection> listByPrice(){
+        return new ResponseEntity<Collection>(prodRepo.findByOrderByPrice(), HttpStatus.OK);
+    }
+
+    // POST for creating a product
     @PostMapping("/products")
     public ResponseEntity<String> createProduct(@RequestBody Product product){
-        productRepo.save(product);
-        return new ResponseEntity<String>("product created", HttpStatus.CREATED);
-
+        prodRepo.save(product);
+        return new ResponseEntity<String>("Product created", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/products/{id}")
+    // DELETE for deleting a product by id
+    @DeleteMapping("products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Integer id){
-       productRepo.deleteById(id);
-        return new ResponseEntity<String>("product deleted", HttpStatus.NO_CONTENT);
+        prodRepo.deleteById(id);
+        return new ResponseEntity<String>("Product deleted", HttpStatus.NO_CONTENT);
     }
+
 }
